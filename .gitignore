@@ -1,0 +1,12 @@
+# IDE
+.idea
+
+# API KEYS
+*.secret
+
+# ENVS
+venv
+
+# Other
+*.pyc
+__pycache__
