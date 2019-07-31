@@ -1,3 +1,0 @@
-# Shreepa Parthaje
-
-PRODUCTION = False
