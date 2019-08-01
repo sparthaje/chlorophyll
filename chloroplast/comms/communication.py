@@ -5,9 +5,10 @@ from .packet import Packet
 
 
 class Comms:
-    def __init__(self, settings):
+    def __init__(self, settings, baudrate):
         self.packet_queue = []
         self.settings = settings
+        self.baudrate = baudrate
 
         ports = get_serial_ports()
 
@@ -15,7 +16,8 @@ class Comms:
             if settings["PRODUCTION"]:
                 raise OSError("No serial device connected")
             else:
-                print("No serial device connected")
+                if settings["DEBUG"]:
+                    print("No serial device connected")
                 self.serial_port = None
                 return
 
