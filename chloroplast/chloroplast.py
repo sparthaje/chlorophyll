@@ -24,13 +24,14 @@ class Chloroplast:
         state = db.reference('/state')
         state.listen(self.firebase_update)
 
-    def __init__(self, settings, firebase_secret, database_url):
-        self.comms = Comms(settings)
+    def __init__(self, settings, baudrate, firebase_secret, database_url):
+        self.comms = Comms(settings, baudrate)
         self.configure_firebase(firebase_secret, database_url)
 
 
 def configure():
-    return Chloroplast(SETTINGS, 'firebase.secret', 'databaseurl.secret')
+    return Chloroplast(SETTINGS['ENVIRONMENT'], SETTINGS['BAUDRATE'], SETTINGS['FIREBASE_SECRET'],
+                       SETTINGS['DATABASE_ENDPOINT'])
 
 
 if __name__ == '__main__':
