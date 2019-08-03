@@ -2,14 +2,16 @@
 
 import glob
 import sys
-import serial
+
+from serial import Serial, SerialException
+from serial.tools import list_ports
 
 
-def get_serial_ports():
+def list_serial_ports(debug):
     """ Lists serial port names
         :raises EnvironmentError: On unsupported or unknown platforms
-        :returns: A list of the serial ports available on the system
-        :source: http://stackoverflow.com/questions/12090503/ddg#14224477
+        :returns A list of the serial ports available on the system
+        :source http://stackoverflow.com/questions/12090503/ddg#14224477
    """
 
     if sys.platform.startswith('win'):
@@ -25,9 +27,13 @@ def get_serial_ports():
     result = []
     for port in ports:
         try:
-            s = serial.Serial(port)
+            s = Serial(port)
             s.close()
             result.append(port)
-        except:
+        except SerialException:
             pass
+
+    if debug and len(result) == 0 and len(list_ports.comports()) > 0:
+        print(f'Fix permissions for these devices (sudo chmod 777): {[port.device for port in list_ports.comports()]}')
+
     return result
