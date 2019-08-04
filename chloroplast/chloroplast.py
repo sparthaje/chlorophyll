@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import db, credentials
 
 from comms.communication import Comms
-from settings import SETTINGS
+from configs import SETTINGS, COMM_CODES
 
 
 class Chloroplast:
@@ -24,13 +24,13 @@ class Chloroplast:
         state = db.reference('/state')
         state.listen(self.firebase_update)
 
-    def __init__(self, settings, baudrate, firebase_secret, database_url):
-        self.comms = Comms(settings, baudrate)
+    def __init__(self, settings, baudrate, comm_codes, firebase_secret, database_url):
+        self.comms = Comms(settings, baudrate, comm_codes)
         self.configure_firebase(firebase_secret, database_url)
 
 
 def configure():
-    return Chloroplast(SETTINGS['ENVIRONMENT'], SETTINGS['BAUDRATE'], SETTINGS['FIREBASE_SECRET'],
+    return Chloroplast(SETTINGS['ENVIRONMENT'], SETTINGS['BAUDRATE'], COMM_CODES, SETTINGS['FIREBASE_SECRET'],
                        SETTINGS['DATABASE_ENDPOINT'])
 
 

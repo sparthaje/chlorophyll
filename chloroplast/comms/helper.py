@@ -35,5 +35,6 @@ def list_serial_ports(debug):
 
     if debug and len(result) == 0 and len(list_ports.comports()) > 0:
         print(f'Fix permissions for these devices (sudo chmod 777): {[port.device for port in list_ports.comports()]}')
+        print('Or close the serial port if its already open\n')
 
     return result
