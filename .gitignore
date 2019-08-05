@@ -9,4 +9,5 @@ venv
 
 # Other
 *.pyc
+*.temp
 __pycache__
