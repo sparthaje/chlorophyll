@@ -13,6 +13,7 @@ SETTINGS = {
 COMM_CODES = {
     'READ': {
         'DEBUG_HEADER': 100,
+        'ERROR_HEADER': 25,
         'FOOTER': 50
     },
     'WRITE': {

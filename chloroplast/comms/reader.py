@@ -16,7 +16,7 @@ class SerialReader(Thread):
         while True:
             data = self.serial.read()
             header = ord(data)
-            if header == self.comm_codes['DEBUG_HEADER']:
+            if header == self.comm_codes['DEBUG_HEADER'] or header == self.comm_codes['ERROR_HEADER']:
                 message_length = ord(self.serial.read())
                 message = ''
                 for i in range(message_length):
@@ -24,7 +24,10 @@ class SerialReader(Thread):
                 footer = ord(self.serial.read())
                 if not footer == self.comm_codes['FOOTER']:
                     raise RuntimeError('Footer byte not printed, possibly corrupted')
-                log(message + '\n', 'ARDUINO')
+                if header == self.comm_codes['ERROR_HEADER']:
+                    log(message + '\n', 'ARDUINO ERROR')
+                else:
+                    log(message + '\n', 'ARDUINO')
             else:
                 log(f'Data: {data}, Header: {header}\n', 'ARDUINO')
             sleep(0.5)

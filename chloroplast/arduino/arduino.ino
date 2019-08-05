@@ -4,6 +4,7 @@
 
 // Write Comm Codes
 #define DEBUG_HEADER 0x64
+#define ERROR_HEADER 0x19
 #define WRITE_FOOTER 0x32
 
 // Read Comm Codes
@@ -12,6 +13,14 @@
 
 void log(String message) {
     Serial.write(DEBUG_HEADER);
+    Serial.write(byte(message.length()));
+    Serial.print(message);
+    Serial.write(WRITE_FOOTER);
+}
+
+
+void error(String message) {
+    Serial.write(ERROR_HEADER);
     Serial.write(byte(message.length()));
     Serial.print(message);
     Serial.write(WRITE_FOOTER);
@@ -32,7 +41,7 @@ void loop() {
           int value = Serial.read();
 
           if (int(Serial.read()) != READ_FOOTER) {
-            log("Corrupted data, should be header, three ints, footer");
+            error("Corrupted data, should be header, three ints, footer");
           } else {
             // write diff methods based on location value
             log("Location is " + String(location) + "; Fixture is " + String(fixture) + "; Value is " + String(value));
