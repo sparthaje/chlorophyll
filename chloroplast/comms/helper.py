@@ -6,6 +6,8 @@ import sys
 from serial import Serial, SerialException
 from serial.tools import list_ports
 
+from .printer import log
+
 
 def list_serial_ports(debug):
     """ Lists serial port names
@@ -34,8 +36,9 @@ def list_serial_ports(debug):
             pass
 
     if debug and len(result) == 0 and len(list_ports.comports()) > 0:
-        print(f'Fix permissions for these devices (sudo chmod 777): {[port.device for port in list_ports.comports()]}')
-        print('Or close the serial port if its already open\n')
+        log(f'Fix permissions for these devices (sudo chmod 777): {[port.device for port in list_ports.comports()]}',
+            'WARNING')
+        log('Or close the serial port if its already open\n', 'WARNING')
 
     return result
 
@@ -48,7 +51,7 @@ def get_port(settings):
             raise OSError('No serial device connected')
         else:
             if settings['DEBUG']:
-                print('No serial device connected')
+                log('No serial device connected\n', 'FAIL')
             return None
 
     if len(ports) == 1:

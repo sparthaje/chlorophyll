@@ -4,6 +4,7 @@ from serial import Serial
 
 from .helper import get_port
 from .packet import Packet
+from .printer import log
 from .reader import SerialReader
 from .writer import SerialWriter, DebugWriter
 
@@ -15,7 +16,7 @@ class Comms:
             return
 
         if self.settings['DEBUG']:
-            print(self)
+            log(self, 'SUCCESS')
 
         serial = Serial(port=self.serial_port, baudrate=self.baudrate, write_timeout=0)
 
@@ -36,7 +37,12 @@ class Comms:
         self.comm_codes = comm_codes
         self.baudrate = baudrate
         self.serial_port = get_port(settings)
-        self.serial, self.reader, self.writer, self.debug_writer = self.serial_config(comm_codes)
+
+        serial_config = self.serial_config(comm_codes)
+        if serial_config:
+            self.serial, self.reader, self.writer, self.debug_writer = serial_config
+        else:
+            self.serial = None
 
     def __str__(self):
         return f'On port {self.serial_port} at a baudrate of {self.baudrate}'
@@ -46,7 +52,10 @@ class Comms:
         fixture = path.split("/")[2]
 
         packet = Packet(location, fixture, data, self.comm_codes)
-        if self.settings["DEBUG"]:
-            print(packet)
+        if self.settings['DEBUG']:
+            log(packet, 'PYTHON')
 
-        self.writer.write_packet(packet)
+        if self.serial:
+            self.writer.write_packet(packet)
+        elif self.settings['DEBUG']:
+            log('No arduino connected!\n', 'WARNING')

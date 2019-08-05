@@ -3,6 +3,8 @@
 from threading import Thread
 from time import sleep
 
+from .printer import log
+
 
 class SerialReader(Thread):
     def __init__(self, serial, comm_codes):
@@ -22,7 +24,7 @@ class SerialReader(Thread):
                 footer = ord(self.serial.read())
                 if not footer == self.comm_codes['FOOTER']:
                     raise RuntimeError('Footer byte not printed, possibly corrupted')
-                print(message)
+                log(message + '\n', 'ARDUINO')
             else:
-                print(data)
+                log(f'Data: {data}, Header: {header}\n', 'ARDUINO')
             sleep(0.5)
