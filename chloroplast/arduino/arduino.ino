@@ -4,15 +4,17 @@
 
 // Write Comm Codes
 #define DEBUG_HEADER 0x64
-#define FOOTER 0x32
+#define WRITE_FOOTER 0x32
 
-// Read Comm COdes
+// Read Comm Codes
+#define PACKET_HEADER 23
+#define READ_FOOTER 32
 
 void log(String message) {
     Serial.write(DEBUG_HEADER);
     Serial.write(byte(message.length()));
     Serial.print(message);
-    Serial.write(FOOTER);
+    Serial.write(WRITE_FOOTER);
 }
 
 void setup() {
@@ -22,12 +24,20 @@ void setup() {
 
 void loop() {
     if (Serial.available() > 0) {
-        int incomingByte = Serial.read();
-        if (incomingByte == 64) {
-          log("header");
+        int next = Serial.read();
+
+        if (next == PACKET_HEADER) {
+          int location = Serial.read();
+          int fixture = Serial.read();
+          int value = Serial.read();
+
+          if (int(Serial.read()) != READ_FOOTER) {
+            log("Corrupted data, should be header, three ints, footer");
+          } else {
+            // write diff methods based on location value
+            log("Location is " + String(location) + "; Fixture is " + String(fixture) + "; Value is " + String(value));
+          }
         }
-        Serial.print(incomingByte);
     }
-    // log("hello");
-    delay(500);
+    delay(100);
 }

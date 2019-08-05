@@ -38,3 +38,22 @@ def list_serial_ports(debug):
         print('Or close the serial port if its already open\n')
 
     return result
+
+
+def get_port(settings):
+    ports = list_serial_ports(settings['DEBUG'])
+
+    if len(ports) == 0:
+        if settings['PRODUCTION']:
+            raise OSError('No serial device connected')
+        else:
+            if settings['DEBUG']:
+                print('No serial device connected')
+            return None
+
+    if len(ports) == 1:
+        port_index = 0
+    else:
+        port_index = int(input(f'Choose which serial port to use: {ports}: '))
+
+    return ports[port_index]

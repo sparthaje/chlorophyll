@@ -2,31 +2,13 @@
 
 from serial import Serial
 
-from .helper import list_serial_ports
+from .helper import get_port
 from .packet import Packet
 from .reader import SerialReader
 from .writer import SerialWriter, DebugWriter
 
 
 class Comms:
-    @staticmethod
-    def get_port(settings):
-        ports = list_serial_ports(settings['DEBUG'])
-
-        if len(ports) == 0:
-            if settings['PRODUCTION']:
-                raise OSError('No serial device connected')
-            else:
-                if settings['DEBUG']:
-                    print('No serial device connected')
-                return None
-
-        if len(ports) == 1:
-            port_index = 0
-        else:
-            port_index = int(input(f'Choose which serial port to use: {ports}: '))
-
-        return ports[port_index]
 
     def serial_config(self, comm_codes):
         if not self.serial_port:
@@ -50,10 +32,10 @@ class Comms:
         return serial, reader, writer, None
 
     def __init__(self, settings, baudrate, comm_codes):
-        self.packet_queue = []
         self.settings = settings
+        self.comm_codes = comm_codes
         self.baudrate = baudrate
-        self.serial_port = self.get_port(settings)
+        self.serial_port = get_port(settings)
         self.serial, self.reader, self.writer, self.debug_writer = self.serial_config(comm_codes)
 
     def __str__(self):
@@ -63,8 +45,8 @@ class Comms:
         location = path.split("/")[1]
         fixture = path.split("/")[2]
 
-        packet = Packet(location, fixture, data)
+        packet = Packet(location, fixture, data, self.comm_codes)
         if self.settings["DEBUG"]:
             print(packet)
 
-        self.packet_queue.append(packet)
+        self.writer.write_packet(packet)

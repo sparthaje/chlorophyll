@@ -16,5 +16,16 @@ COMM_CODES = {
         'FOOTER': 50
     },
     'WRITE': {
+        'PACKET_HEADER': bytes([23]),
+        'PACKET_FOOTER': bytes([32])
+    },
+    'NAME_MAP': {
+        'LOCATIONS': {
+            'CEILING': bytes([0])
+        },
+        'FIXTURES': {
+            'FAN': bytes([0]),
+            'LIGHT': bytes([1])
+        }
     },
 }
