@@ -57,6 +57,6 @@ def get_port(settings):
     if len(ports) == 1:
         port_index = 0
     else:
-        port_index = int(input(f'Choose which serial port to use: {ports}: '))
+        port_index = int(input(f'Choose which serial port to use (0-{len(ports) - 1}): {ports}: '))
 
     return ports[port_index]
