@@ -40,15 +40,16 @@ void error(String message) {
 
 void changeState(int location, int fixture, int value) {
     if (fixture >= fixturePinsLength[location]) {
-        error("Invalid fixture value");
+        error("Invalid fixture value: " + String(fixture));
         return;
     }
 
     if (value > 1) {
-        error("Invalid state (either 0 or 1)");
+        error("Invalid state: " + String(value));
         return;
     }
 
+    log(String(fixturePins[location][fixture])+ "/" + String(value) + " " +  String(location) + String(fixture) + String(value));
     digitalWrite(fixturePins[location][fixture], value);
 }
 
@@ -62,9 +63,8 @@ void readPacket() {
         return;
     }
 
-    log("LFV: " + String(location) + ", " + String(fixture) + ", " + String(value));
     if (location >= locations) {
-        error("Unknown location");
+        error("Unknown location: " + String(location));
         return;
     }
 
@@ -72,11 +72,11 @@ void readPacket() {
 }
 
 void indicateSerialClose() {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 15; i++) {
         digitalWrite(13, 1);
-        delay(1000);
+        delay(50);
         digitalWrite(13, 0);
-        delay(1000);
+        delay(50);
     }
 }
 
@@ -107,7 +107,7 @@ void setup() {
     // Set all relay pins to output
     for (int location = 0; location < locations; location++) {
         for (int pin = 0; pin < fixturePinsLength[location]; pin++) {
-            log("Setting pin " + String(pin) + " at location " + String(location) + " to output.");
+            log("Setting pin " + String(fixturePins[location][pin]) + " at location " + String(location) + " to output.");
             pinMode(fixturePins[location][pin], OUTPUT);
         }
     }

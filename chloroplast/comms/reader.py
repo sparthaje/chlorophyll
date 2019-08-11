@@ -7,10 +7,11 @@ from .printer import log
 
 
 class SerialReader(Thread):
-    def __init__(self, serial, comm_codes):
+    def __init__(self, serial, comm_codes, debug):
         Thread.__init__(self)
         self.serial = serial
         self.comm_codes = comm_codes
+        self.debug = debug
 
     def run(self):
         while True:
@@ -26,8 +27,8 @@ class SerialReader(Thread):
                     raise RuntimeError('Footer byte not printed, possibly corrupted')
                 if header == self.comm_codes['ERROR_HEADER']:
                     log(message + '\n', 'ARDUINO ERROR')
-                else:
+                elif self.debug:
                     log(message + '\n', 'ARDUINO')
-            else:
+            elif self.debug:
                 log(f'Data: {data}, Header: {header}\n', 'ARDUINO')
             sleep(0.5)
