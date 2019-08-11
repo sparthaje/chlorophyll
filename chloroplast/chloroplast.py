@@ -1,5 +1,7 @@
 # Shreepa Parthaje
 
+from time import sleep
+
 import firebase_admin
 from firebase_admin import db, credentials
 
@@ -15,6 +17,13 @@ class Chloroplast:
         if isinstance(data, bool):
             self.comms.state_change(path, data)
 
+    def configure_current_state(self, state):
+        sleep(2)
+        current = state.get()
+        for location in current:
+            for fixture in current[location]:
+                self.comms.state_change(f'/{location}/{fixture}', current[location][fixture])
+
     def configure_firebase(self, firebase_secret, database_url):
         cred = credentials.Certificate(firebase_secret)
         with open(database_url) as f:
@@ -22,6 +31,8 @@ class Chloroplast:
                 'databaseURL': f.read()
             })
         state = db.reference('/state')
+
+        self.configure_current_state(state)
         state.listen(self.firebase_update)
 
     def __init__(self, settings, baudrate, comm_codes, firebase_secret, database_url):
