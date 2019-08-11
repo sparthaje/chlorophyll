@@ -1,13 +1,18 @@
 # Shreepa Parthaje
 
+from os import path
+from os.path import join
+
+ROOT_DIR = path.dirname(path.dirname(path.abspath(__file__)))
+
 SETTINGS = {
     'ENVIRONMENT': {
         'PRODUCTION': False,
         'DEBUG': True
     },
     'BAUDRATE': 9600,
-    'FIREBASE_SECRET': 'firebase.secret',
-    'DATABASE_ENDPOINT': 'databaseurl.secret',
+    'FIREBASE_SECRET': join(ROOT_DIR, 'firebase.secret'),
+    'DATABASE_ENDPOINT': join(ROOT_DIR, 'databaseurl.secret'),
 }
 
 COMM_CODES = {
