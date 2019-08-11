@@ -23,3 +23,6 @@ class SerialWriter:
     def write_packet(self, packet):
         for byte in packet.data():
             self.serial.write(byte)
+
+    def signal_close(self):
+        self.serial.write(self.comm_codes["SERIAL_CLOSE"])

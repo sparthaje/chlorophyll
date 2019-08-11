@@ -10,6 +10,7 @@ const byte WRITE_FOOTER = 0x32;
 // Read Comm Codes
 const int PACKET_HEADER = 23;
 const int READ_FOOTER = 32;
+const int SERIAL_CLOSE = 40;
 
 // Relay Pin Information
 const int locations = 1;
@@ -70,12 +71,24 @@ void readPacket() {
     changeState(location, fixture, value);
 }
 
+void indicateSerialClose() {
+    for (int i = 0; i < 5; i++) {
+        digitalWrite(13, 1);
+        delay(1000);
+        digitalWrite(13, 0);
+        delay(1000);
+    }
+}
+
 void readData() {
     if (Serial.available() > 0) {
         int header = Serial.read();
         switch (header) {
             case PACKET_HEADER:
                 readPacket();
+                break;
+            case SERIAL_CLOSE:
+                indicateSerialClose();
                 break;
             default:
                 break;
@@ -87,6 +100,9 @@ void setup() {
     // Start serial
     Serial.begin(BAUDRATE);
     Serial.flush();
+
+    // Turn built-in LED to output
+    pinMode(13, OUTPUT);
 
     // Set all relay pins to output
     for (int location = 0; location < locations; location++) {

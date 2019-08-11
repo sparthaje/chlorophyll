@@ -62,4 +62,5 @@ class Comms:
 
     def shutdown(self):
         if self.serial:
+            self.writer.signal_close()
             self.serial.close()

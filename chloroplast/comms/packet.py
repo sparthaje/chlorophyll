@@ -17,5 +17,5 @@ class Packet:
                   self.comm_codes['NAME_MAP']['LOCATIONS'][self.location],
                   self.comm_codes['NAME_MAP']['FIXTURES'][self.fixture],
                   bytes([1]) if self.value else bytes([0]),
-                  self.comm_codes['WRITE']['PACKET_FOOTER']]
+                  self.comm_codes['WRITE']['WRITE_FOOTER']]
         return result

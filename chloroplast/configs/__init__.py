@@ -23,7 +23,8 @@ COMM_CODES = {
     },
     'WRITE': {
         'PACKET_HEADER': bytes([23]),
-        'PACKET_FOOTER': bytes([32])
+        'WRITE_FOOTER': bytes([32]),
+        'SERIAL_CLOSE': bytes([40])
     },
     'NAME_MAP': {
         'LOCATIONS': {
