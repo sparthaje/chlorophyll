@@ -11,9 +11,17 @@ const byte WRITE_FOOTER = 0x32;
 const int PACKET_HEADER = 23;
 const int READ_FOOTER = 32;
 
-// Ceiling Relay Pins
-const int ceilingFixtures = 2;
-const int ceilingFixturePins[] = {2, 13};
+// Relay Pin Information
+const int locations = 1;
+const int maxPinsLocation = 5;
+
+// Relay Pins Definition
+const int fixturePins[locations][maxPinsLocation] = {
+    {2, 13, 0, 0, 0} // Ceiling
+};
+const int fixturePinsLength[locations] = {
+    2 // Ceiling
+};
 
 void log(String message) {
     Serial.write(DEBUG_HEADER);
@@ -29,8 +37,8 @@ void error(String message) {
     Serial.write(WRITE_FOOTER);
 }
 
-void changeCeilingState(int fixture, int value) {
-    if (fixture + 1 > ceilingFixtures) {
+void changeState(int location, int fixture, int value) {
+    if (fixture >= fixturePinsLength[location]) {
         error("Invalid fixture value");
         return;
     }
@@ -40,7 +48,7 @@ void changeCeilingState(int fixture, int value) {
         return;
     }
 
-    digitalWrite(ceilingFixturePins[fixture], value);
+    digitalWrite(fixturePins[location][fixture], value);
 }
 
 void readPacket() {
@@ -50,17 +58,16 @@ void readPacket() {
 
     if (int(Serial.read()) != READ_FOOTER) {
         error("Packet data is corrupted. Should be [32, location, fixture, value, 23]");
-    } else {
-        log("Location is " + String(location) + "; Fixture is " + String(fixture) + "; Value is " + String(value));
-        switch (location) {
-            case 0:
-                changeCeilingState(fixture, value);
-                break;
-            default:
-                error("Unknown location");
-                break;
-        }
+        return;
     }
+
+    log("Location is " + String(location) + "; Fixture is " + String(fixture) + "; Value is " + String(value));
+    if (location >= locations) {
+        error("Unknown location");
+        return;
+    }
+
+    changeState(location, fixture, value);
 }
 
 void readData() {
@@ -77,11 +84,16 @@ void readData() {
 }
 
 void setup() {
+    // Start serial
     Serial.begin(BAUDRATE);
     Serial.flush();
 
-    for (int i = 0; i < ceilingFixtures; i++) {
-        pinMode(ceilingFixturePins[i], OUTPUT);
+    // Set all relay pins to output
+    for (int location = 0; location < locations; location++) {
+        for (int pin = 0; pin < fixturePinsLength[location]; pin++) {
+            log("Setting pin " + String(pin) + " at location " + String(location) + " to output.");
+            pinMode(fixturePins[location][pin], OUTPUT);
+        }
     }
 
 }
