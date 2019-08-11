@@ -1,5 +1,7 @@
 # Shreepa Parthaje
 
+import signal
+
 from comms import Comms
 from configs import SETTINGS, COMM_CODES
 from firebase import Database
@@ -19,3 +21,4 @@ def configure():
 
 if __name__ == '__main__':
     chloroplast = configure()
+    signal.signal(signal.SIGINT, lambda sig, frame: chloroplast.comms.shutdown())

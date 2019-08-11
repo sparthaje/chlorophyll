@@ -59,3 +59,7 @@ class Comms:
             self.writer.write_packet(data_packet)
         elif self.settings['DEBUG']:
             log('No arduino connected!\n', 'WARNING')
+
+    def shutdown(self):
+        if self.serial:
+            self.serial.close()

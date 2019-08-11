@@ -61,7 +61,7 @@ void readPacket() {
         return;
     }
 
-    log("Location is " + String(location) + "; Fixture is " + String(fixture) + "; Value is " + String(value));
+    log("LFV: " + String(location) + ", " + String(fixture) + ", " + String(value));
     if (location >= locations) {
         error("Unknown location");
         return;
