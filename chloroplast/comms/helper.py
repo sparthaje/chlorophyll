@@ -44,6 +44,9 @@ def list_serial_ports(debug):
 
 
 def get_port(settings):
+    if settings['PRODUCTION']:
+        return [port for port in list_serial_ports(settings['DEBUG']) if 'USB' in port][0]
+
     ports = list_serial_ports(settings['DEBUG'])
 
     if len(ports) == 0:
