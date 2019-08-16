@@ -1,5 +1,6 @@
 # Shreepa Parthaje
 
+import argparse
 import signal
 
 from comms import Comms
@@ -14,7 +15,19 @@ class Chloroplast:
         self.database = Database(firebase_secret, database_url, self.comms.state_change)
 
 
+def set_env():
+    parser = argparse.ArgumentParser(description='chloroplast env')
+    parser.add_argument('--production', help='Set production to True or False (default is True)')
+    parser.add_argument('--debug', help='Set production to True or False (default is False)')
+    args = parser.parse_args()
+    if args.debug:
+        SETTINGS['ENVIRONMENT']['DEBUG'] = args.debug == 'True'
+    if args.production:
+        SETTINGS['ENVIRONMENT']['PRODUCTION'] = args.production == 'True'
+
+
 def configure():
+    set_env()
     return Chloroplast(SETTINGS['ENVIRONMENT'], SETTINGS['BAUDRATE'], COMM_CODES, SETTINGS['FIREBASE_SECRET'],
                        SETTINGS['DATABASE_ENDPOINT'])
 

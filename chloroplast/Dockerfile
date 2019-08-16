@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD [ "python", "./chloroplast.py" ]
+CMD [ "python", "./chloroplast.py", "--production", "True"]

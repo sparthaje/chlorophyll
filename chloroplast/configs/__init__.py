@@ -7,8 +7,8 @@ ROOT_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 
 SETTINGS = {
     'ENVIRONMENT': {
-        'PRODUCTION': False,
-        'DEBUG': True
+        'PRODUCTION': True,
+        'DEBUG': False
     },
     'BAUDRATE': 9600,
     'FIREBASE_SECRET': join(ROOT_DIR, 'firebase.secret'),
