@@ -3,7 +3,7 @@
 from serial import Serial
 
 from .helper import get_port
-from .packet import Packet
+from .packet import RelayPacket, PinPacket
 from .printer import log
 from .reader import SerialReader
 from .writer import SerialWriter, DebugWriter
@@ -47,11 +47,17 @@ class Comms:
     def __str__(self):
         return f'On port {self.serial_port} at a baudrate of {self.baudrate}'
 
+    def set_pin_mode(self):
+        for location in self.comm_codes['OUTPUT_PINS']:
+            for fixture in self.comm_codes['OUTPUT_PINS'][location]:
+                pin_packet = PinPacket(True, self.comm_codes['OUTPUT_PINS'][location][fixture], self.comm_codes)
+                self.writer.write_packet(pin_packet)
+
     def state_change(self, path, data):
         location = path.split("/")[1]
         fixture = path.split("/")[2]
 
-        data_packet = Packet(location, fixture, data, self.comm_codes)
+        data_packet = RelayPacket(location, fixture, data, self.comm_codes)
         if self.settings['DEBUG']:
             log(data_packet, 'PYTHON')
 

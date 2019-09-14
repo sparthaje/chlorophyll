@@ -9,20 +9,10 @@ const byte WRITE_FOOTER = 0x32;
 
 // Read Comm Codes
 const int PACKET_HEADER = 23;
+const int OUTPUT_HEADER = 20;
+const int INPUT_HEADER = 30;
 const int READ_FOOTER = 32;
 const int SERIAL_CLOSE = 40;
-
-// Relay Pin Information
-const int locations = 1;
-const int maxPinsLocation = 5;
-
-// Relay Pins Definition
-const int fixturePins[locations][maxPinsLocation] = {
-    {2, 13, 0, 0, 0} // Ceiling
-};
-const int fixturePinsLength[locations] = {
-    2 // Ceiling
-};
 
 void log(String message) {
     Serial.write(DEBUG_HEADER);
@@ -38,37 +28,22 @@ void error(String message) {
     Serial.write(WRITE_FOOTER);
 }
 
-void changeState(int location, int fixture, int value) {
-    if (fixture >= fixturePinsLength[location]) {
-        error("Invalid fixture value: " + String(fixture));
-        return;
-    }
-
-    if (value > 1) {
-        error("Invalid state: " + String(value));
-        return;
-    }
-
-    log(String(fixturePins[location][fixture])+ "/" + String(value) + " " +  String(location) + String(fixture) + String(value));
-    digitalWrite(fixturePins[location][fixture], value);
-}
-
 void readPacket() {
-    int location = Serial.read();
-    int fixture = Serial.read();
+    int pinNumber = Serial.read();
     int value = Serial.read();
 
+    String v = "ON";
+    if (value == 0) {
+        v = "OFF";
+    }
+
     if (int(Serial.read()) != READ_FOOTER) {
-        error("Packet data is corrupted. Should be [32, location, fixture, value, 23]");
+        error("Packet data is corrupted. Should be [32, pinNumber, value, 23]");
         return;
     }
 
-    if (location >= locations) {
-        error("Unknown location: " + String(location));
-        return;
-    }
-
-    changeState(location, fixture, value);
+    digitalWrite(pinNumber, value);
+    log(String(pinNumber) + "/" + v);
 }
 
 void indicateSerialClose() {
@@ -80,12 +55,40 @@ void indicateSerialClose() {
     }
 }
 
+void setOutput() {
+    int pinNumber = Serial.read();
+
+    if (int(Serial.read()) != READ_FOOTER) {
+        error("Output packet data is corrupted. Should be [20, pinNumber, 23]");
+        return;
+    }
+    log("Setting pin " + String(pinNumber) + " to output.");
+    pinMode(pinNumber, OUTPUT);
+}
+
+void setInput() {
+    int pinNumber = Serial.read();
+
+    if (int(Serial.read()) != READ_FOOTER) {
+        error("Input packet data is corrupted. Should be [30, pinNumber, 23]");
+        return;
+    }
+    log("Setting pin " + String(pinNumber) + " to input.");
+    pinMode(pinNumber, INPUT);
+}
+
 void readData() {
     if (Serial.available() > 0) {
         int header = Serial.read();
         switch (header) {
             case PACKET_HEADER:
                 readPacket();
+                break;
+            case OUTPUT_HEADER:
+                setOutput();
+                break;
+            case INPUT_HEADER:
+                setInput();
                 break;
             case SERIAL_CLOSE:
                 indicateSerialClose();
@@ -103,15 +106,6 @@ void setup() {
 
     // Turn built-in LED to output
     pinMode(13, OUTPUT);
-
-    // Set all relay pins to output
-    for (int location = 0; location < locations; location++) {
-        for (int pin = 0; pin < fixturePinsLength[location]; pin++) {
-            log("Setting pin " + String(fixturePins[location][pin]) + " at location " + String(location) + " to output.");
-            pinMode(fixturePins[location][pin], OUTPUT);
-        }
-    }
-
 }
 
 void loop() {

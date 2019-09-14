@@ -12,7 +12,7 @@ class Chloroplast:
 
     def __init__(self, settings, baudrate, comm_codes, firebase_secret, database_url):
         self.comms = Comms(settings, baudrate, comm_codes)
-        self.database = Database(firebase_secret, database_url, self.comms.state_change)
+        self.database = Database(firebase_secret, database_url, self.comms.set_pin_mode, self.comms.state_change)
 
 
 def set_env():

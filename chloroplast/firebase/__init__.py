@@ -17,6 +17,7 @@ class Database:
 
     def configure_current_state(self, state):
         sleep(2)
+        self.set_pin_modes()
         current = state.get()
         for location in current:
             for fixture in current[location]:
@@ -33,6 +34,7 @@ class Database:
         self.configure_current_state(state)
         state.listen(self.firebase_update)
 
-    def __init__(self, firebase_secret, database_url, handler):
+    def __init__(self, firebase_secret, database_url, set_pin_modes, handler):
+        self.set_pin_modes = set_pin_modes
         self.handler = handler
         self.configure_firebase(firebase_secret, database_url)

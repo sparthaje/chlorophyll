@@ -23,16 +23,15 @@ COMM_CODES = {
     },
     'WRITE': {
         'PACKET_HEADER': bytes([23]),
+        'OUTPUT_HEADER': bytes([20]),
+        'INPUT_HEADER': bytes([30]),
         'WRITE_FOOTER': bytes([32]),
         'SERIAL_CLOSE': bytes([40])
     },
-    'NAME_MAP': {
-        'LOCATIONS': {
-            'CEILING': bytes([0])
-        },
-        'FIXTURES': {
-            'FAN': bytes([0]),
-            'LIGHT': bytes([1])
+    'OUTPUT_PINS': {
+        'CEILING': {
+            'FAN': bytes([2]),
+            'LIGHT': bytes([3])
         }
     },
 }
