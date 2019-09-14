@@ -2,6 +2,7 @@
 
 
 class RelayPacket:
+    """ RelayPacket transforms str data from the database into a byte array to send via serial """
 
     def __init__(self, location, fixture, value, comm_codes):
         self.location = location
@@ -20,6 +21,7 @@ class RelayPacket:
 
 
 class PinPacket:
+    """ PinPacket creates an array of bytes to configure a pin to output/input via serial """
 
     def __init__(self, output, pin_number_bytes, comm_codes):
         self.output = output

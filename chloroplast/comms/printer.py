@@ -13,4 +13,6 @@ Colors = {
 
 
 def log(content, color):
+    """ Prints content with color """
+
     print(f'{Colors[color]}{color}: {content}' + '\033[0m')

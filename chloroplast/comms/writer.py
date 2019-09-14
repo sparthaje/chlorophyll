@@ -4,6 +4,10 @@ from threading import Thread
 
 
 class DebugWriter(Thread):
+    """ Threaded listener, takes input from terminal and sends to arduino
+        TODO: make it useful
+     """
+
     def __init__(self, serial):
         Thread.__init__(self)
         self.serial = serial
@@ -16,6 +20,8 @@ class DebugWriter(Thread):
 
 
 class SerialWriter:
+    """ Can write a packet with a data method via serial """
+
     def __init__(self, serial, comm_codes):
         self.serial = serial
         self.comm_codes = comm_codes

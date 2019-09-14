@@ -12,6 +12,8 @@ from .writer import SerialWriter, DebugWriter
 class Comms:
 
     def serial_config(self, comm_codes):
+        """ Creates a Serial, SerialReader, SerialWriter, DebugWriter based on given preferences """
+
         if not self.serial_port:
             return
 
@@ -33,6 +35,8 @@ class Comms:
         return serial, serial_reader, serial_writer, None
 
     def __init__(self, settings, baudrate, comm_codes):
+        """ Creates a Comms with given environment settings and communication codes at a given baudrate on a port """
+
         self.settings = settings
         self.comm_codes = comm_codes
         self.baudrate = baudrate
@@ -48,12 +52,17 @@ class Comms:
         return f'On port {self.serial_port} at a baudrate of {self.baudrate}'
 
     def set_pin_mode(self):
+        """ Tells arduino to configure specific pins (defined by OUTPUT_PINS and INPUT_PINS in comm_codes)
+        to OUTPUT/INPUT"""
+
         for location in self.comm_codes['OUTPUT_PINS']:
             for fixture in self.comm_codes['OUTPUT_PINS'][location]:
                 pin_packet = PinPacket(True, self.comm_codes['OUTPUT_PINS'][location][fixture], self.comm_codes)
                 self.writer.write_packet(pin_packet)
 
     def state_change(self, path, data):
+        """ Takes a path from the database along with the data and writes it to the arduino to signal the relay """
+
         location = path.split("/")[1]
         fixture = path.split("/")[2]
 
@@ -67,6 +76,8 @@ class Comms:
             log('No arduino connected!\n', 'WARNING')
 
     def shutdown(self):
+        """ Closes the port and signals to the arduino that the port is closing """
+        
         if self.serial:
             self.writer.signal_close()
             self.serial.close()

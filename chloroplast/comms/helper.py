@@ -44,6 +44,7 @@ def list_serial_ports(debug):
 
 
 def get_port(settings):
+    """ Based on the env settings, either chooses the first available port or allows the user to pick the port """
     ports = list_serial_ports(settings['DEBUG'])
 
     if settings['PRODUCTION']:
