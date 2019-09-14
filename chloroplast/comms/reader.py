@@ -29,6 +29,12 @@ class SerialReader(Thread):
                     log(message + '\n', 'ARDUINO ERROR')
                 elif self.debug:
                     log(message + '\n', 'ARDUINO')
+            elif header == self.comm_codes['STATE_HEADER']:
+                pin = self.serial.read()
+                log(pin, 'PYTHON')
+                footer = ord(self.serial.read())
+                if not footer == self.comm_codes['FOOTER']:
+                    raise RuntimeError('Footer byte not printed, possibly corrupted')
             elif self.debug:
                 log(f'Data: {data}, Header: {header}\n', 'ARDUINO')
             sleep(0.5)

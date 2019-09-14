@@ -19,6 +19,7 @@ COMM_CODES = {
     'READ': {
         'DEBUG_HEADER': 100,
         'ERROR_HEADER': 25,
+        'STATE_HEADER': 37,
         'FOOTER': 50
     },
     'WRITE': {
@@ -32,6 +33,12 @@ COMM_CODES = {
         'CEILING': {
             'FAN': bytes([2]),
             'LIGHT': bytes([3])
+        }
+    },
+    "INPUT_PINS": {
+        'CEILING': {
+            'FAN': bytes([4]),
+            'LIGHT': bytes([7])
         }
     },
 }

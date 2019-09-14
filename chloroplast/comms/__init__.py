@@ -57,7 +57,12 @@ class Comms:
 
         for location in self.comm_codes['OUTPUT_PINS']:
             for fixture in self.comm_codes['OUTPUT_PINS'][location]:
-                pin_packet = PinPacket(True, self.comm_codes['OUTPUT_PINS'][location][fixture], self.comm_codes)
+                pin_packet = PinPacket(self.comm_codes['OUTPUT_PINS'][location][fixture], self.comm_codes)
+                self.writer.write_packet(pin_packet)
+
+        for location in self.comm_codes['INPUT_PINS']:
+            for index, fixture in enumerate(self.comm_codes['INPUT_PINS'][location]):
+                pin_packet = PinPacket(self.comm_codes['INPUT_PINS'][location][fixture], self.comm_codes, index)
                 self.writer.write_packet(pin_packet)
 
     def state_change(self, path, data):
@@ -77,7 +82,7 @@ class Comms:
 
     def shutdown(self):
         """ Closes the port and signals to the arduino that the port is closing """
-        
+
         if self.serial:
             self.writer.signal_close()
             self.serial.close()

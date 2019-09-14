@@ -5,6 +5,7 @@ const int BAUDRATE = 9600;
 // Write Comm Codes
 const byte DEBUG_HEADER = 0x64;
 const byte ERROR_HEADER = 0x19;
+const byte STATE_HEADER = 0x25;
 const byte WRITE_FOOTER = 0x32;
 
 // Read Comm Codes
@@ -13,6 +14,11 @@ const int OUTPUT_HEADER = 20;
 const int INPUT_HEADER = 30;
 const int READ_FOOTER = 32;
 const int SERIAL_CLOSE = 40;
+
+// Inputs
+const int inputs = 2;
+int inputPins[inputs] = {0, 0};
+int inputStates[inputs] = {0, 0};
 
 void log(String message) {
     Serial.write(DEBUG_HEADER);
@@ -25,6 +31,12 @@ void error(String message) {
     Serial.write(ERROR_HEADER);
     Serial.write(byte(message.length()));
     Serial.print(message);
+    Serial.write(WRITE_FOOTER);
+}
+
+void writeInput(int pin) {
+    Serial.write(STATE_HEADER);
+    Serial.write(byte(pin));
     Serial.write(WRITE_FOOTER);
 }
 
@@ -57,6 +69,11 @@ void indicateSerialClose() {
 
 void setPin(bool output) {
     int pinNumber = Serial.read();
+
+    if (!output) {
+        int index = Serial.read();
+        inputPins[index] = pinNumber;
+    }
 
     if (int(Serial.read()) != READ_FOOTER) {
         if (output) {
@@ -96,6 +113,26 @@ void readData() {
     }
 }
 
+void readInput() {
+    for (int index = 0; index < inputs; index ++) {
+        int pin = inputPins[index];
+        int currentState = inputStates[index];
+        int reading = digitalRead(pin);
+
+        if (reading != currentState) {
+            if (reading == 1) {
+                // First time the button is clicked
+                inputStates[index] = 1;
+                writeInput(pin);
+                log(String(pin) + " has been clicked");
+            } else {
+                // Button has been let go
+                inputStates[index] = 0;
+            }
+        }
+    }
+}
+
 void setup() {
     // Start serial
     Serial.begin(BAUDRATE);
@@ -107,5 +144,6 @@ void setup() {
 
 void loop() {
     readData();
+    readInput();
     delay(100);
 }
