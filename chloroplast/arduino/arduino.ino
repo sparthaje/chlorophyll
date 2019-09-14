@@ -55,25 +55,22 @@ void indicateSerialClose() {
     }
 }
 
-void setOutput() {
+void setPin(bool output) {
     int pinNumber = Serial.read();
 
     if (int(Serial.read()) != READ_FOOTER) {
-        error("Output packet data is corrupted. Should be [20, pinNumber, 23]");
-        return;
-    }
-    log("Setting pin " + String(pinNumber) + " to output.");
-    pinMode(pinNumber, OUTPUT);
-}
-
-void setInput() {
-    int pinNumber = Serial.read();
-
-    if (int(Serial.read()) != READ_FOOTER) {
+        if (output) {
+            error("Output packet data is corrupted. Should be [20, pinNumber, 23]");
+        }
         error("Input packet data is corrupted. Should be [30, pinNumber, 23]");
         return;
     }
-    log("Setting pin " + String(pinNumber) + " to input.");
+
+    if (output) {
+        pinMode(pinNumber, OUTPUT);
+        return;
+    }
+
     pinMode(pinNumber, INPUT);
 }
 
@@ -85,10 +82,10 @@ void readData() {
                 readPacket();
                 break;
             case OUTPUT_HEADER:
-                setOutput();
+                setPin(true);
                 break;
             case INPUT_HEADER:
-                setInput();
+                setPin(false);
                 break;
             case SERIAL_CLOSE:
                 indicateSerialClose();
