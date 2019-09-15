@@ -8,7 +8,12 @@ from firebase_admin import db, credentials
 
 class Database:
 
-    def firebase_update(self, event):
+    @staticmethod
+    def update_firebase(location, fixture):
+        db_reference = db.reference('/state').child(location).child(fixture)
+        db_reference.set(not db_reference.get())
+
+    def handle_firebase_update(self, event):
         """ Handles a change in the firebase realtime database """
 
         path = event.path
@@ -39,7 +44,7 @@ class Database:
         state = db.reference('/state')
 
         self.configure_current_state(state)
-        state.listen(self.firebase_update)
+        state.listen(self.handle_firebase_update)
 
     def __init__(self, firebase_secret, database_url, set_pin_modes, handler):
         """ Takes the filenames for the secret information and two methods to handle

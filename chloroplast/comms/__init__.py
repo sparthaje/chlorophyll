@@ -22,7 +22,7 @@ class Comms:
 
         serial = Serial(port=self.serial_port, baudrate=self.baudrate, write_timeout=0)
 
-        serial_reader = SerialReader(serial, comm_codes['READ'], self.settings['DEBUG'])
+        serial_reader = SerialReader(serial, comm_codes['READ'], comm_codes['INPUT_PINS'], self.settings['DEBUG'])
         serial_reader.start()
 
         serial_writer = SerialWriter(serial, comm_codes['WRITE'])
