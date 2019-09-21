@@ -1,6 +1,10 @@
 # solar
 
 ## Project setup
+Copy `.env.example` to `.env` and fill it out.
+
+Copy `secret.json.example` to `secret.json`
+
 ```
 yarn install
 ```
@@ -13,6 +17,7 @@ yarn run serve
 ### Compiles and minifies for production
 ```
 yarn run build
+serve -s dist
 ```
 
 ### Run your tests
@@ -24,6 +29,3 @@ yarn run test
 ```
 yarn run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
