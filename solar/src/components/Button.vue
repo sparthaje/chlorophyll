@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 col-lg-6 button" v-bind:style="{ 'background-color': color }">
+    <div class="col-12 col-lg-6 ml-auto mr-auto button" v-bind:style="{ 'background-color': color }">
         {{msg}}
     </div>
 </template>
@@ -19,7 +19,7 @@
         border-radius: 10px;
         background-color: black;
         color: white;
-        font-size: 20px;
+        font-size: 25px;
     }
 
     .col-12 {

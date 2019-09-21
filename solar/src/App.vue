@@ -1,11 +1,14 @@
 <template>
     <div id="app">
         <div class="container-fluid">
-            <div class="row title-row">
-                CEILING
-            </div>
-            <div class="row button-row" v-on:click="updateFirebase('CEILING', 'LIGHT', true)">
-                <Button msg="Turn Light On" color="rgb(0, 100, 0)"/>
+            <div v-for="location in Object.keys(state)" class="location">
+                <div class="row title">
+                    {{location}}
+                </div>
+                <div v-for="fixture in Object.keys(state[location])" class="row button-row" v-on:click="updateFirebase(location, fixture, !state[location][fixture])">
+                    <Button v-if="state[location][fixture]" v-bind:msg="fixture" color="rgb(69, 158, 87)"/>
+                    <Button v-else v-bind:msg="fixture" color="rgb(188, 69, 97)"/>
+                </div>
             </div>
         </div>
     </div>
@@ -36,8 +39,8 @@
                 const ref = this.$data.database.child('/' + location).child('/' + fixture);
                 ref.set(value).then();
             },
-            listenFirebase: function(snapshot) {
-              this.$data.state = snapshot.val()
+            listenFirebase: function (snapshot) {
+                this.$data.state = snapshot.val()
             },
         },
         mounted: function () {
@@ -63,6 +66,17 @@
         margin-top: 20px;
     }
 
+    .location {
+        background-color: rgb(235, 235, 235);
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    .title {
+        font-size: 30px;
+        padding-left: 20px;
+    }
+
     .button-row {
         padding: 30px;
     }
@@ -75,6 +89,10 @@
 
         #app {
             color: white;
+        }
+
+        .location {
+            background-color: #454545;
         }
     }
 </style>
