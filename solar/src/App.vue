@@ -48,7 +48,7 @@
             firebase.initializeApp(firebaseConfig);
             firebase.auth().signInWithEmailAndPassword(process.env.VUE_APP_EMAIL, process.env.VUE_APP_PASSWORD).catch();
 
-            var database = firebase.database().ref('/state');
+            const database = firebase.database().ref('/state');
             database.on('value', this.listenFirebase);
 
             this.$data.database = database
@@ -64,6 +64,13 @@
         text-align: center;
         color: #2c3e50;
         margin-top: 20px;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
     .location {
