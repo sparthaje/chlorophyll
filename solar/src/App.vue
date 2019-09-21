@@ -2,9 +2,9 @@
     <div id="app">
         <div class="container-fluid">
             <div class="row title-row">
-              CEILING
+                CEILING
             </div>
-            <div class="row button-row">
+            <div class="row button-row" v-on:click="updateFirebase('CEILING', 'LIGHT', true)">
                 <Button msg="Turn Light On" color="rgb(0, 100, 0)"/>
             </div>
         </div>
@@ -12,6 +12,12 @@
 </template>
 
 <script>
+    import * as firebase from "firebase/app";
+    import firebaseConfig from '../secret.json'
+
+    require('firebase/auth');
+    require('firebase/database');
+
     import Button from './components/Button.vue'
 
     export default {
@@ -20,7 +26,29 @@
             Button
         },
         data: function () {
-            return {}
+            return {
+                database: '',
+                state: {}
+            }
+        },
+        methods: {
+            updateFirebase: function (location, fixture, value) {
+                const ref = this.$data.database.child('/' + location).child('/' + fixture);
+                ref.set(value).then();
+            },
+            listenFirebase: function(snapshot) {
+              this.$data.state = snapshot.val()
+            },
+        },
+        mounted: function () {
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            firebase.auth().signInWithEmailAndPassword(process.env.VUE_APP_EMAIL, process.env.VUE_APP_PASSWORD).catch();
+
+            var database = firebase.database().ref('/state');
+            database.on('value', this.listenFirebase);
+
+            this.$data.database = database
         }
     }
 </script>
@@ -44,8 +72,9 @@
             background-color: #353535;
             color: white;
         }
+
         #app {
-          color: white;
+            color: white;
         }
     }
 </style>
