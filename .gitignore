@@ -12,7 +12,6 @@ node_modules/
 
 # Builds
 /dist
-/public
 *.pyc
 *.temp
 __pycache__
