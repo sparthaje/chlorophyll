@@ -20,6 +20,7 @@
         background-color: black;
         color: white;
         font-size: 25px;
+        text-align: center;
     }
 
     .col-12 {

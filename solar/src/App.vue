@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <div class="header">Solar</div>
         <div class="container-fluid">
             <div v-for="location in Object.keys(state)" class="location">
                 <div class="row title">
@@ -61,7 +62,6 @@
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        text-align: center;
         color: #2c3e50;
         margin-top: 20px;
 
@@ -71,6 +71,13 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+
+        font-size: 60px;
+    }
+
+    .header {
+        margin-left: 40px;
+        margin-bottom: 10px;
     }
 
     .location {
