@@ -15,7 +15,7 @@ class DebugWriter(Thread):
     def run(self):
         while True:
             message = input()
-            if message == '0':
+            if message == "0":
                 self.serial.write(bytes([int(input())]))
 
 
