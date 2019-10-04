@@ -109,4 +109,4 @@ class TestWriter(TestCase):
         for i in range(4):
             result.append(ord(read(master, 1)))
 
-        self.assertEqual(1, result)
+        self.assertEqual([23, 2, 0, 32], result)
