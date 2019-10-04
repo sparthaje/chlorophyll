@@ -52,6 +52,24 @@ class TestPackets(TestCase):
         )
 
 
+class TestWriter(TestCase):
+    def test_relay_packet(self):
+        master, slave = openpty()
+        port_name = ttyname(slave)
+
+        serial = Serial(port=port_name)
+        writer = SerialWriter(serial, comm_codes["WRITE"])
+
+        rp = RelayPacket("CEILING", "FAN", False, comm_codes)
+        writer.write_packet(rp)
+
+        result = []
+        for i in range(4):
+            result.append(ord(read(master, 1)))
+
+        self.assertEqual([23, 2, 0, 32], result)
+
+
 class TestReader(TestCase):
     def test_debug(self):
         master, slave = openpty()
@@ -93,20 +111,20 @@ class TestReader(TestCase):
         matches = input(f"Is the output ARDUINO ERROR: {message}")
         self.assertNotEqual(matches, 'NO')
 
-
-class TestWriter(TestCase):
-    def test_relay_packet(self):
+    def test_start_state_change(self):
         master, slave = openpty()
         port_name = ttyname(slave)
 
         serial = Serial(port=port_name)
-        writer = SerialWriter(serial, comm_codes["WRITE"])
+        reader = SerialReader(serial, comm_codes["READ"], comm_codes["INPUT_PINS"], True)
+        reader.handler = lambda location, fixture: print(f'({location}, {fixture})')
+        reader.start()
 
-        rp = RelayPacket("CEILING", "FAN", False, comm_codes)
-        writer.write_packet(rp)
+        write(master, bytes([37]))
+        write(master, bytes([7]))
+        write(master, bytes([50]))
 
-        result = []
-        for i in range(4):
-            result.append(ord(read(master, 1)))
+        sleep(0.5)
 
-        self.assertEqual([23, 2, 0, 32], result)
+        matches = input('Is the output (CEILING, LOCATION)')
+        self.assertNotEqual(matches, 'NO')
