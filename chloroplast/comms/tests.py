@@ -69,6 +69,38 @@ class TestWriter(TestCase):
 
         self.assertEqual([23, 2, 0, 32], result)
 
+    def test_output_pin_packet(self):
+        master, slave = openpty()
+        port_name = ttyname(slave)
+
+        serial = Serial(port=port_name)
+        writer = SerialWriter(serial, comm_codes["WRITE"])
+
+        op = PinPacket(bytes([1]), comm_codes)
+        writer.write_packet(op)
+
+        result = []
+        for i in range(3):
+            result.append(ord(read(master, 1)))
+
+        self.assertEqual([20, 1, 32], result)
+
+    def test_input_pin_packet(self):
+        master, slave = openpty()
+        port_name = ttyname(slave)
+
+        serial = Serial(port=port_name)
+        writer = SerialWriter(serial, comm_codes["WRITE"])
+
+        op = PinPacket(bytes([1]), comm_codes, index=4)
+        writer.write_packet(op)
+
+        result = []
+        for i in range(4):
+            result.append(ord(read(master, 1)))
+
+        self.assertEqual([30, 1, 4, 32], result)
+
 
 class TestReader(TestCase):
     def test_debug(self):
