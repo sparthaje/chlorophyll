@@ -1,12 +1,13 @@
 from serial import Serial
 
 from pty import openpty
-from os import ttyname, write
+from os import ttyname, write, read
 from time import sleep
 from unittest import TestCase
 
 from .packet import RelayPacket, PinPacket
 from .reader import SerialReader
+from .writer import SerialWriter
 
 comm_codes = {
     "READ": {"DEBUG_HEADER": 100, "ERROR_HEADER": 25, "STATE_HEADER": 37, "FOOTER": 50},
@@ -91,3 +92,21 @@ class TestReader(TestCase):
 
         matches = input(f"Is the output ARDUINO ERROR: {message}")
         self.assertNotEqual(matches, 'NO')
+
+
+class TestWriter(TestCase):
+    def test_relay_packet(self):
+        master, slave = openpty()
+        port_name = ttyname(slave)
+
+        serial = Serial(port=port_name)
+        writer = SerialWriter(serial, comm_codes["WRITE"])
+
+        rp = RelayPacket("CEILING", "FAN", False, comm_codes)
+        writer.write_packet(rp)
+
+        result = []
+        for i in range(4):
+            result.append(ord(read(master, 1)))
+
+        self.assertEqual(1, result)
