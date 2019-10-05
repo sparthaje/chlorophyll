@@ -7,10 +7,9 @@ from firebase_admin import db, credentials
 
 
 class Database:
-
     @staticmethod
     def update_firebase(location, fixture):
-        db_reference = db.reference('/state').child(location).child(fixture)
+        db_reference = db.reference("/state").child(location).child(fixture)
         db_reference.set(not db_reference.get())
 
     def handle_firebase_update(self, event):
@@ -31,17 +30,15 @@ class Database:
         current = state.get()
         for location in current:
             for fixture in current[location]:
-                self.handler(f'/{location}/{fixture}', current[location][fixture])
+                self.handler(f"/{location}/{fixture}", current[location][fixture])
 
     def configure_firebase(self, firebase_secret, database_url):
         """ Handles the security while connecting the firebase_update method to updates in the database """
 
         cred = credentials.Certificate(firebase_secret)
         with open(database_url) as f:
-            firebase_admin.initialize_app(cred, {
-                'databaseURL': f.read()
-            })
-        state = db.reference('/state')
+            firebase_admin.initialize_app(cred, {"databaseURL": f.read()})
+        state = db.reference("/state")
 
         self.configure_current_state(state)
         state.listen(self.handle_firebase_update)

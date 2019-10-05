@@ -14,10 +14,12 @@ class RelayPacket:
         return f"Packet to set {self.fixture} at {self.location} to {'on' if self.value else 'off'}"
 
     def data(self):
-        return [self.comm_codes['WRITE']['PACKET_HEADER'],
-                self.comm_codes['OUTPUT_PINS'][self.location][self.fixture],
-                bytes([1]) if self.value else bytes([0]),
-                self.comm_codes['WRITE']['WRITE_FOOTER']]
+        return [
+            self.comm_codes["WRITE"]["PACKET_HEADER"],
+            self.comm_codes["OUTPUT_PINS"][self.location][self.fixture],
+            bytes([1]) if self.value else bytes([0]),
+            self.comm_codes["WRITE"]["WRITE_FOOTER"],
+        ]
 
 
 class PinPacket:
@@ -33,10 +35,14 @@ class PinPacket:
 
     def data(self):
         if self.index is None:
-            return [self.comm_codes['WRITE']['OUTPUT_HEADER'],
-                    self.pin_number_bytes,
-                    self.comm_codes['WRITE']['WRITE_FOOTER']]
-        return [self.comm_codes['WRITE']['INPUT_HEADER'],
+            return [
+                self.comm_codes["WRITE"]["OUTPUT_HEADER"],
                 self.pin_number_bytes,
-                bytes([self.index]),
-                self.comm_codes['WRITE']['WRITE_FOOTER']]
+                self.comm_codes["WRITE"]["WRITE_FOOTER"],
+            ]
+        return [
+            self.comm_codes["WRITE"]["INPUT_HEADER"],
+            self.pin_number_bytes,
+            bytes([self.index]),
+            self.comm_codes["WRITE"]["WRITE_FOOTER"],
+        ]
