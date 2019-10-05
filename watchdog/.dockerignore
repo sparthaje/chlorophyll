@@ -1,0 +1,10 @@
+# IDE
+**/.idea
+
+# ENVS
+**/venv
+
+# Other
+*.pyc
+*.temp
+**/__pycache__
