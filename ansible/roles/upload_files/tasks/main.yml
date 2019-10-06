@@ -47,11 +47,3 @@
   tags:
     - upload_files
     - upload
-
-- name: Transfer load_docker_images.sh
-  template:
-    src: files/load_docker_images.sh
-    dest: ~/.config/chlorophyll/load_docker_images.sh
-  tags:
-    - upload_files
-    - upload

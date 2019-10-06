@@ -1,1 +1,1 @@
-sudo docker run --privileged -d --name=chloroplast chloroplast-docker
+docker run --privileged -d --name=chloroplast chloroplast-docker
