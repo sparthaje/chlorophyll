@@ -1,0 +1,33 @@
+---
+
+- name: Create image directory
+  file:
+    path: ~/dockerimages
+    state: directory
+  tags:
+    - upload_images
+    - create_dir
+
+- name: Transfer chloroplast-docker.tar
+  template:
+    src: dockerimages/chloroplast-docker.tar
+    dest: ~/dockerimages/chloroplast-docker.tar
+  tags:
+    - upload_images
+    - upload
+
+- name: Transfer solar-docker.tar
+  template:
+    src: dockerimages/solar-docker.tar
+    dest: ~/dockerimages/solar-docker.tar
+  tags:
+    - upload_images
+    - upload
+
+- name: Transfer c-watchdog-docker.tar
+  template:
+    src: dockerimages/c-watchdog-docker.tar
+    dest: ~/dockerimages/c-watchdog-docker.tar
+  tags:
+    - upload_images
+    - upload

@@ -1,0 +1,35 @@
+---
+
+# sudo apt-get update
+
+- name: Install aptitude
+  apt:
+    name: aptitude
+    state: present
+
+- name: Update apt packages
+  apt:
+    update_cache: no
+  tags:
+    - general
+
+# sudo apt-get install
+#   apt-transport-https \
+#   ca-certificates \
+#   curl \
+#   gnupg-agent \
+#   software-properties-common
+
+- name: Install necessary packages
+  apt: 
+    name: "{{item}}"
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+  tags:
+    - general
+
