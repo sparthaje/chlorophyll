@@ -1,1 +1,0 @@
-docker run -d --name=solar -p 5000:5000 solar-docker
