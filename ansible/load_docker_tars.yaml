@@ -1,5 +1,0 @@
-- name: Load Docker Images
-  hosts: chlorophyllnodes
-  remote_user: root
-  roles:
-    - load_images
