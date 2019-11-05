@@ -2,6 +2,5 @@
   hosts: chlorophyllnodes
   remote_user: root
   roles:
-    - upload_files
     - general
-    - install_docker
+    - chloroplast

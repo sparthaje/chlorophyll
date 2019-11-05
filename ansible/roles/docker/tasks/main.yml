@@ -1,0 +1,4 @@
+---
+
+- name: Install Docker
+  shell: "curl -sL https://get.docker.com | sed 's/9)/10)/' | sh"
