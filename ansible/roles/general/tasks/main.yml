@@ -24,6 +24,7 @@
     - python3-pip
     - python3-venv
     - vim
+    - git
   tags:
     - general
 

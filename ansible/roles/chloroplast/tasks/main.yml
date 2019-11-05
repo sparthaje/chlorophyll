@@ -10,13 +10,14 @@
   shell: "cd ~/chlorophyll && python3 -m venv venv"
 
 - name: "Install required pip packages for chloroplast"
-  shell: "cd ~/chlorophyll && source venv/bin/activate && cd chloroplast && pip install -r requirements.txt"
+  pip:
+    requirements: ~/chlorophyll/chloroplast/requirements.txt
+    virtualenv: ~/chlorophyll/venv
 
-- name: "Install required pip packages for chloroplast"
-  shell: "cd ~/chlorophyll && source venv/bin/activate && cd chloroplast && pip install -r requirements.txt"
-
-- name: "Install required pip packages for shortcut-tool"
-  shell: "cd ~/chlorophyll && source venv/bin/activate && cd shortcut_tool && pip install -r requirements.txt"
+- name: "Install required pip packages for shortcut_tool"
+  pip:
+    requirements: ~/chlorophyll/shortcut_tool/requirements.txt
+    virtualenv: ~/chlorophyll/venv
 
 - name: "firebase.secret to chloroplast"
   copy:
@@ -33,7 +34,7 @@
     src: "files/firebase.secret"
     dest: "~/chlorophyll/shortcut_tool/firebase.secret"
 
-- name: "databaseurl.secret to shortcut_tool"
+- name: "databaseurl.secret to chloroplast"
   copy:
     src: "files/databaseurl.secret"
     dest: "~/chlorophyll/shortcut_tool/databaseurl.secret"
