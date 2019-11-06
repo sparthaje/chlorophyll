@@ -8,7 +8,7 @@ from configs import SETTINGS, COMM_CODES
 from firebase import Database
 
 
-class Chloroplast:
+class ArduinoChloroplast:
     def __init__(self, settings, baudrate, comm_codes, firebase_secret, database_url):
         self.comms = Comms(settings, baudrate, comm_codes)
         self.database = Database(
@@ -37,7 +37,7 @@ def set_env():
 
 def configure():
     set_env()
-    return Chloroplast(
+    return ArduinoChloroplast(
         SETTINGS["ENVIRONMENT"],
         SETTINGS["BAUDRATE"],
         COMM_CODES,
