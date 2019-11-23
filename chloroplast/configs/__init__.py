@@ -33,9 +33,9 @@ PIN_MAP = {
         }
     },
     "INPUT": {
-        # "CEILING": {
-        #     "FAN": 3,
-        #     "LIGHT": 4
-        # }
+        "CEILING": {
+            "FAN": 3,
+            "LIGHT": 5
+        }
     },
 }
