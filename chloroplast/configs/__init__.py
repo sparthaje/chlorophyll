@@ -28,14 +28,14 @@ COMM_CODES = {
 PIN_MAP = {
     "OUTPUT": {
         "CEILING": {
-            "FAN": 1,
-            "LIGHT": 2
+            "FAN": 8,
+            "LIGHT": 10
         }
     },
     "INPUT": {
-        "CEILING": {
-            "FAN": 3,
-            "LIGHT": 4
-        }
+        # "CEILING": {
+        #     "FAN": 3,
+        #     "LIGHT": 4
+        # }
     },
 }
