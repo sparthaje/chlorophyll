@@ -25,6 +25,7 @@
     - python3-venv
     - vim
     - git
+    - htop
   tags:
     - general
 
