@@ -3,31 +3,30 @@
 from threading import Thread
 
 import RPi.GPIO as GPIO
+from firebase_admin import db
 
 
 class InputReader(Thread):
-    def __init__(self, pins, input_pins):
+    def __init__(self, input_pins, input_pins_info):
         Thread.__init__(self)
-        self.pins = pins
         self.input_pins = input_pins
-        self.states = dict([(pin, GPIO.input(pin)) for pin in pins])
-        self.handler = None
+        self.input_pins_info = input_pins_info
+        self.states = {pin: GPIO.input(pin) for pin in input_pins}
 
     def run(self):
         while True:
-            for pin in self.pins:
+            for pin in self.input_pins:
                 old = self.states[pin]
                 current = GPIO.input(pin)
-                if not old and current:
-                    # Just clicked
-                    if self.handler is None:
-                        continue
 
-                    args = ()
-                    for location in self.input_pins:
-                        for fixture in self.input_pins[location]:
-                            if self.input_pins[location][fixture] == pin:
-                                args = (location, fixture)
-                    self.handler(*args)
+                if not old and current:  # Wasn't on before and is on now
+                    location, fixture = '', ''  # Find the location / fixture that the input pin corresponds to
+                    for loc in self.input_pins_info:
+                        for fix in self.input_pins_info[loc]:
+                            if self.input_pins_info[loc][fix] == pin:
+                                location, fixture = loc, fix
+
+                    db_reference = db.reference("/state").child(location).child(fixture)
+                    db_reference.set(not db_reference.get())
 
                 self.states[pin] = current

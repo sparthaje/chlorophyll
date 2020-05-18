@@ -34,7 +34,7 @@
     src: "files/firebase.secret"
     dest: "~/chlorophyll/shortcut_tool/firebase.secret"
 
-- name: "databaseurl.secret to chloroplast"
+- name: "databaseurl.secret to shortcut_tool"
   copy:
     src: "files/databaseurl.secret"
     dest: "~/chlorophyll/shortcut_tool/databaseurl.secret"

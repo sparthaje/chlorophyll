@@ -7,35 +7,32 @@ from .reader import InputReader
 
 class Pi:
 
-    def __init__(self, settings, pin_map):
+    def __init__(self, pin_map):
         GPIO.setmode(GPIO.BOARD)
 
-        self.settings = settings
         self.pin_map = pin_map
-        self.output_pins = pin_map["OUTPUT"]
-        self.input_pins = pin_map["INPUT"]
+        self.output_pin_info = pin_map["OUTPUT"]
+        self.input_pin_info = pin_map["INPUT"]
 
-        pins = self.configure_pins()
-
-        self.reader = InputReader(pins, self.input_pins)
-        self.reader.start()
-
-    def configure_pins(self):
-        for location in self.output_pins:
-            for fixture in self.output_pins[location]:
-                GPIO.setup(self.output_pins[location][fixture], GPIO.OUT)
+        for location in self.output_pin_info:
+            for fixture in self.output_pin_info[location]:
+                GPIO.setup(self.output_pin_info[location][fixture], GPIO.OUT)
 
         pins = []
-        for location in self.input_pins:
-            for fixture in self.input_pins[location]:
-                GPIO.setup(self.input_pins[location][fixture], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-                pins.append(self.input_pins[location][fixture])
-        return pins
+        for location in self.input_pin_info:
+            for fixture in self.input_pin_info[location]:
+                GPIO.setup(self.input_pin_info[location][fixture], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+                pins.append(self.input_pin_info[location][fixture])
 
-    def state_change(self, path, data):
+        self.reader = InputReader(pins, self.input_pin_info)
+
+    def start(self):
+        self.reader.start()
+
+    def update_relay(self, path, data):
         """ Takes a path from the database along with the data and writes it to the GPIO pins """
 
         location = path.split("/")[1]
         fixture = path.split("/")[2]
-        pin = self.output_pins[location][fixture]
+        pin = self.output_pin_info[location][fixture]
         GPIO.output(pin, data)
