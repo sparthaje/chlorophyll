@@ -1,0 +1,16 @@
+---
+
+- name: Install "yarn" node.js package globally.
+  npm:
+    name: yarn
+    global: yes
+
+- name: Install "serve" node.js package globally.
+  npm:
+    name: serve
+    global: yes
+
+- name: Transfer `dist` dir
+  copy:
+    src: ../../../solar/dist
+    dest: ~/dist

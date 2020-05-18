@@ -15,5 +15,3 @@
 5) Copy ssh keys to `root@hostname`
 
 6) `ansible-playbook -i hosts configure_nodes.yml`
-	
-8) `ansible-playbook -i hosts configure_nodes.yml`
