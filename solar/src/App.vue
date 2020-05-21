@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div class="header">Solar</div>
+        <div class="header">Dashboard</div>
         <div class="container-fluid">
             <div v-for="location in Object.keys(state)" class="location">
                 <div class="row title">

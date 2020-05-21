@@ -13,4 +13,4 @@
 - name: Transfer `dist` dir
   copy:
     src: ../../../solar/dist
-    dest: ~/dist
+    dest: ~/
